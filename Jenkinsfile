@@ -1,45 +1,117 @@
-
-def appName ='Upload_App'
-def namePath ='/api/retest/11'
-def deplyName = 'TEST'
-def response =''
-def dataFormat ='json'
-def fileName ='deployable'
-def target ='deployable'
-def commit ='true'
-def validate ='true'
-def changesetNumber =''
-def finalresponse =''
+  
+      def appName='Upload_App'
+      def snapName=''
+      def deployName = 'TEST'
+      def exportFormat ='json'
+      def configFilePath = "paymentService"
+      def fileNamePrefix ='exported_file_'
+      def fullFileName="${appName}-${deployName}-${currentBuild.number}.${exportFormat}"
+      def changeSetId=""
+      def snapshotName=""
+      def exporterName ='exporterWithARGS_3' 
 pipeline {
     agent any
     stages {
-        stage('publish') {
-            steps {
-                echo "<<<<<<<<<Upload file is starting >>>>>>>>"
-          script{
-               //with changesetNumber and deployable
-                response = snDevOpsConfigUpload(applicationName: "${appName}", deployableName: "${deplyName}",dataFormat: "${dataFormat}",fileName: "${fileName}",target:"${target}",namePath: "${namePath}",autoCommit:"false",autoValidate:"${validate}",changesetNumber:"${changesetNumber}")
-                response = snDevOpsConfigUpload(applicationName: "${appName}", deployableName: "Prod",dataFormat: "${dataFormat}",fileName: "${fileName}",target:"${target}",namePath: "${namePath}",autoCommit:"${commit}",autoValidate:"${validate}",changesetNumber:"${response}")
-                //without deployableName
-                // response = snDevOpsConfigUpload(applicationName: "${appName}",dataFormat: "${dataFormat}",fileName: "${fileName}",target:"${target}",namePath: "${namePath}",autoCommit:"${commit}",autoValidate:"${validate}",changesetNumber:"${changesetNumber}")
-                //without changesetNumber
-                //  response = snDevOpsConfigUpload(applicationName: "${appName}", deployableName: "${deplyName}",dataFormat: "${dataFormat}",fileName: "${fileName}",target:"${target}",namePath: "${namePath}",autoCommit:"${commit}",autoValidate:"${validate}")
-                //without changesetNumber and deployableName
-                // response = snDevOpsConfigUpload(applicationName: "${appName}",dataFormat: "${dataFormat}",fileName: "${fileName}",target:"${target}",namePath: "${namePath}",autoCommit:"${commit}",autoValidate:"${validate}")
-                // finalresponse = snDevOpsConfigUpload(applicationName: "Test_app_1",dataFormat: "${dataFormat}",fileName: "component4",target:"${target}",namePath: "${namePath}/upload2",autoCommit:"${commit}",autoValidate:"${validate}",changesetNumber:"${response}")
+        stage('Clone repository') {               
+             
+            checkout scm    
+      }     
+      stage('Build image') {       
 
-            }
-                echo " RESPONSE FROM UPLOAD : ${response}"
-                // echo " RESPONSE FROM FINAL UPLOAD: ${finalresponse}"
-            }
+            snDevOpsStep()
+
+            app = docker.build("santoshnrao/demo-training-studio")    
+       }     
+//       stage('Test image') {           
+//             app.inside {            
+             
+//              sh 'echo "Tests passed"'        
+//             }    
+//         }     
+//        stage('Push image') {
+//                   sh 'ls -a'
+//                   docker.withRegistry('https://registry.hub.docker.com', 'santoshnrao-dockerhub') {            
+//                   app.push("${env.BUILD_NUMBER}")            
+//                   app.push("latest")        
+//               }    
+
+//            }
+
+      
+      stage('Validate Configurtion file'){
+            
+
+            sh "echo validating configuration file ${configFilePath}.${exportFormat}"
+            changeSetId = snDevOpsConfigUpload(applicationName:"${appName}",target:'component',namePath:'paymentservice.v1.1', fileName:"${configFilePath}", autoCommit:'true',autoValidate:'true',dataFormat:"${exportFormat}")
+
+            echo "validation result $changeSetId"
+      }
+
+    stage("register change set to pipeline"){
+        echo "Change set registration for ${changeSetId}"
+        changeSetRegResult = snDevOpsConfigRegisterChangeSet(changesetId:"${changeSetId}")
+        echo "change set registration set result ${changeSetRegResult}"
+    }
+
+    stage("Get snapshots created"){
+          
+        echo "Triggering Get snapshots for applicationName:${appName},deployableName:${deployName},changeSetId:${changeSetId}"
+
+        changeSetResults = snDevOpsConfigGetSnapshots(applicationName:"${appName}",deployableName:"${deployName}",changeSetId:"${changeSetId}")
+        echo "ChangeSet Result : ${changeSetResults}"
+        
+        def changeSetResultsObject = readJSON text: changeSetResults
+//         def changeSetResultsObject = jsonSlurper.parseText("${changeSetResults}")
+        
+          changeSetResultsObject.each {
+
+                if(it.validation == "passed"){
+                      echo "validation passed for snapshot : ${it.name}"
+                      snapshotName = it.name
+                }else{
+                      echo "Snapshot failed to get validated : ${it.name}" ;
+                      assert it.validation == "passed"
+                }
+            
+          }
+          if (!snapshotName?.trim()){
+                error "No snapshot found to proceed" ;
+          }
+          echo "Snapshot Name : ${snapshotName} "                
+          
+    }
+
+    stage('Publish the snapshot'){
+        echo "Step to publish snapshot applicationName:${appName},deployableName:${deployName} snapshotName:${snapshotName}"
+        publishSnapshotResults = snDevOpsConfigPublish(applicationName:"${appName}",deployableName:"${deployName}",snapshotName: "${snapshotName}")
+        echo " Publish result for applicationName:${appName},deployableName:${deployName} snapshotName:${snapshotName} is ${publishSnapshotResults} "
+    }
+
+        stage('Deploy to the System'){
+                echo "Devops Change trigger change request"
+                snDevOpsChange()
+              
         }
-        stage('export'){
-            steps{
-                echo "export started."
-                echo " ++++++++++++"
-                // snDevOpsChange()
-                echo "export finished successfully."
-            }
+
+      stage('Download Snapshots from Service Now') {
+            
+            echo "Exporting for App: ${appName} Deployable; ${deployName} Exporter name ${exporterName} "
+            echo "Configfile exporter file name ${fullFileName}"
+            sh  'echo "<<<<<<<<<export file is starting >>>>>>>>"'
+               response = snDevOpsConfigExport(applicationName: "${appName}", snapshotName: "${snapName}", deployableName: "${deployName}",exporterFormat: "${exportFormat}", fileName:"${fullFileName}",exporterName: "${exporterName}")
+                echo " RESPONSE FROM EXPORT : ${response}"
         }
+      
+      stage("Deploying to PROD-US"){
+            
+                echo "Reading config from file name ${fullFileName}"
+                echo " ++++++++++++ BEGIN OF File Content ***************"
+                sh "cat ${fullFileName}"
+                echo " ++++++++++++ END OF File content ***************"
+                
+                echo "deploy finished successfully."
+            
+      }
+        
     }
 }
