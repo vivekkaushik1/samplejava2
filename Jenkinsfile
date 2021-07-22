@@ -24,7 +24,7 @@ pipeline {
                     sh "echo validating configuration file ${configFilePath}.${exportFormat}"
                     echo "name path ::::: ${namePath}"
                     changeSetId = snDevOpsConfigUpload(applicationName:"${appName}",target:'component',namePath:"${namePath}", fileName:"component1", autoCommit:'false',autoValidate:'true',dataFormat:"${exportFormat}")
-                    snDevOpsConfigUpload(applicationName:"${appName}",target:'deployable',namePath:"${namePath}", fileName:"deployable", autoCommit:'true',autoValidate:'false',dataFormat:"${exportFormat}",changesetNumber:"${changeSetId}", deployableName:"${deployName}")
+                    snDevOpsConfigUpload(applicationName:"${appName}",target:'deployable',namePath:"${namePath}", fileName:"deployable", autoCommit:'true',autoValidate:'true',dataFormat:"${exportFormat}",changesetNumber:"${changeSetId}", deployableName:"${deployName}")
                     echo "validation result $changeSetId"
                 }
             }
