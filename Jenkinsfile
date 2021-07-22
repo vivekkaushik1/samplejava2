@@ -8,7 +8,8 @@
     def changeSetId=""
     def snapshotName=""
     def exporterName ='returnAllData' 
-    def namePath ="E2E/pipelineUpload/${currentBuild.number}"
+    // def namePath ="E2E/pipelineUpload/${currentBuild.number}"
+    def namePath ='component1'
 pipeline {
     agent any
     stages {
@@ -23,8 +24,8 @@ pipeline {
                 script{
                     sh "echo validating configuration file ${configFilePath}.${exportFormat}"
                     echo "name path ::::: ${namePath}"
-                    changeSetId = snDevOpsConfigUpload(applicationName:"${appName}",target:'component',namePath:"${namePath}", fileName:"component1", autoCommit:'false',autoValidate:'true',dataFormat:"${exportFormat}")
-                    snDevOpsConfigUpload(applicationName:"${appName}",target:'deployable',namePath:"${namePath}", fileName:"deployable", autoCommit:'true',autoValidate:'true',dataFormat:"${exportFormat}",changesetNumber:"${changeSetId}", deployableName:"${deployName}")
+                    changeSetId = snDevOpsConfigUpload(applicationName:"${appName}",target:'component',namePath:"${namePath}", fileName:"component1", autoCommit:'true',autoValidate:'true',dataFormat:"${exportFormat}")
+                    // snDevOpsConfigUpload(applicationName:"${appName}",target:'deployable',namePath:"${namePath}", fileName:"deployable", autoCommit:'true',autoValidate:'true',dataFormat:"${exportFormat}",changesetNumber:"${changeSetId}", deployableName:"${deployName}")
                     echo "validation result $changeSetId"
                 }
             }
@@ -45,15 +46,15 @@ pipeline {
                     changeSetResults = snDevOpsConfigGetSnapshots(applicationName:"${appName}",deployableName:"${deployName}",changeSetId:"${changeSetId}")
                     echo "ChangeSet Result : ${changeSetResults}"
                     def changeSetResultsObject = readJSON text: changeSetResults
-                    changeSetResultsObject.each {
-                        if(it.validation == "passed"){
-                            echo "validation passed for snapshot : ${it.name}"
-                            snapshotName = it.name
-                        }else{
-                            echo "Snapshot failed to get validated : ${it.name}" ;
-                            assert it.validation == "passed"
+                         changeSetResultsObject.each {
+                            if(it.validation == "passed"){
+                                echo "validation passed for snapshot : ${it.name}"
+                                snapshotName = it.name
+                            }else{
+                                echo "Snapshot failed to get validated : ${it.name}" ;
+                                assert it.validation == "passed"
+                            }
                         }
-                    }
                   if (!snapshotName?.trim()){
                     error "No snapshot found to proceed" ;
                   }
