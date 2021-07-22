@@ -1,5 +1,5 @@
 {
-    "serviceId": "pay12347",
+    "serviceId": "pay12348",
     "featureToggles": {
         "paymentRefund": "enabled",
         "myPreferredPaymentMethods": "enabled",
