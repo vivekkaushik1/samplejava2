@@ -1,6 +1,8 @@
-    def appName='E2E_App'
+    //def appName='E2E_App'
+    def appName='PerfApps0'
     def snapName=''
-    def deployName = 'TEST'
+    //def deployName = 'TEST'
+    def deployName ='PerfApps0_dep__0'	
     def exportFormat ='json'
     def configFilePath = "paymentService"
     def fileNamePrefix ='exported_file_'
@@ -9,7 +11,8 @@
     def snapshotName=""
     def exporterName ='returnAllData' 
     // def namePath ="E2E/pipelineUpload/${currentBuild.number}"
-    def namePath ='component1'
+//    def namePath ='component1'
+    def namePath ="PerfApps0_dep__coll__comp_0/${JOB_NAME}/${currentBuild.number}"
 pipeline {
     agent any
     stages {
