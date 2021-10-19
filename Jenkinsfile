@@ -38,7 +38,7 @@ pipeline {
             steps{
                 script{
                     echo "Change set registration for ${changeSetId}"
-                    changeSetRegResult = snDevOpsConfigRegisterChangeSet(changesetId:"${changeSetId}")
+                    changeSetRegResult = snDevOpsConfigRegisterChangeSet(changesetNumber:"${changeSetId}")
                     echo "change set registration set result ${changeSetRegResult}"
                 }
             }
@@ -47,7 +47,7 @@ pipeline {
             steps{
                 echo "Triggering Get snapshots for applicationName:${appName},deployableName:${deployName},changeSetId:${changeSetId}"
                 script{
-                    changeSetResults = snDevOpsConfigGetSnapshots(applicationName:"${appName}",deployableName:"${deployName}",changeSetId:"${changeSetId}")
+                    changeSetResults = snDevOpsConfigGetSnapshots(applicationName:"${appName}",deployableName:"${deployName}",changesetNumber:"${changeSetId}")
                     echo "ChangeSet Result : ${changeSetResults}"
                     def changeSetResultsObject = readJSON text: changeSetResults
                          changeSetResultsObject.each {
