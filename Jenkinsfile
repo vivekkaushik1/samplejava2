@@ -43,7 +43,7 @@ pipeline {
                 }
             }
         }
-        /* stage("Get snapshots created"){
+         /*stage("Get snapshots created"){
             steps{
                 echo "Triggering Get snapshots for applicationName:${appName},deployableName:${deployName},changeSetId:${changeSetId}"
                 script{
@@ -66,6 +66,7 @@ pipeline {
                 }
             }
         }*/
+        snapshotName='PerfApps0_dep__9-v9.dpl';
         stage('Publish the snapshot'){
             steps{
                 script{
