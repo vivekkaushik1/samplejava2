@@ -90,7 +90,8 @@ pipeline {
                     echo "Exporting for App: ${appName} Deployable; ${deployName} Exporter name ${exporterName} "
                     echo "Configfile exporter file name ${fullFileName}"
                     sh  'echo "<<<<<<<<<export file is starting >>>>>>>>"'
-                    response = snDevOpsConfigExport(applicationName: "${appName}", snapshotName: "${snapName}", deployableName: "${deployName}",exporterFormat: "${exportFormat}", fileName:"${fullFileName}",exporterName: "${exporterName}")
+                    response = snDevOpsConfigExport(applicationName: "${appName}", snapshotName: "${snapshotName}", deployableName: "${deployName}",exporterFormat: "${exportFormat}", fileName:"${fullFileName}",exporterName: "${exporterName}")
+                    //response = snDevOpsConfigExport(applicationName: "${appName}", snapshotName: "${snapName}", deployableName: "${deployName}",exporterFormat: "${exportFormat}", fileName:"${fullFileName}",exporterName: "${exporterName}")
                     echo " RESPONSE FROM EXPORT : ${response}"
                 }
             }
