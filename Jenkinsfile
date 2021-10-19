@@ -43,7 +43,7 @@ pipeline {
                 }
             }
         }
-        stage("Get snapshots created"){
+        /* stage("Get snapshots created"){
             steps{
                 echo "Triggering Get snapshots for applicationName:${appName},deployableName:${deployName},changeSetId:${changeSetId}"
                 script{
@@ -65,7 +65,7 @@ pipeline {
                   echo "Snapshot Name : ${snapshotName} "  
                 }
             }
-        }
+        }*/
         stage('Publish the snapshot'){
             steps{
                 script{
