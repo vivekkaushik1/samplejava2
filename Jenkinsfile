@@ -9,7 +9,7 @@
     def fileNamePrefix ='exported_file_'
     def fullFileName="${appName}-${deployName}-${currentBuild.number}.${exportFormat}"
     def changeSetId=""
-    def snapshotName="PerfApps0_dep__9-v9.dpl"
+    def snapshotName="PerfApps0_dep__0-v8.dpl"
     def exporterName ='returnAllData' 
 
     // def namePath ="E2E/pipelineUpload/${currentBuild.number}"
