@@ -9,7 +9,7 @@
     def fileNamePrefix ='exported_file_'
     def fullFileName="${appName}-${deployName}-${currentBuild.number}.${exportFormat}"
     def changeSetId=""
-    def snapshotName="PerfApps0_dep__0-v8.dpl"
+    def snapshotName=""
     def exporterName ='returnAllData' 
 
     // def namePath ="E2E/pipelineUpload/${currentBuild.number}"
@@ -44,7 +44,7 @@ pipeline {
                 }
             }
         }
-         /*stage("Get snapshots created"){
+         stage("Get snapshots created"){
             steps{
                 echo "Triggering Get snapshots for applicationName:${appName},deployableName:${deployName},changeSetId:${changeSetId}"
                 script{
@@ -66,7 +66,7 @@ pipeline {
                   echo "Snapshot Name : ${snapshotName} "  
                 }
             }
-        }*/
+        }
       
         stage('Publish the snapshot'){
             steps{
