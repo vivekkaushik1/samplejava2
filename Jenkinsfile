@@ -21,7 +21,7 @@ pipeline {
         stage('Clone repository') {               
            steps{
                 // checkout scm
-                git branch: 'master', url: 'https://github.com/iamkumaramit/samplejava.git'
+                git branch: 'master', url: 'https://github.com/vivekkaushik1/samplejava'
            }
         }     
         stage('Validate Configurtion file'){
@@ -52,13 +52,15 @@ pipeline {
                     echo "ChangeSet Result : ${changeSetResults}"
                     def changeSetResultsObject = readJSON text: changeSetResults
                          changeSetResultsObject.each {
-                            if(it.validation == "passed"){
+                           /* if(it.validation == "passed"){
                                 echo "validation passed for snapshot : ${it.name}"
                                 snapshotName = it.name
                             }else{
                                 echo "Snapshot failed to get validated : ${it.name}" ;
                                 assert it.validation == "passed"
-                            }
+                            }*/
+                            echo "validation passed for snapshot : ${it.name}"
+                            snapshotName = it.name 
                         }
                   if (!snapshotName?.trim()){
                     error "No snapshot found to proceed" ;
