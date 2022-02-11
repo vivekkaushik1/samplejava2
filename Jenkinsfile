@@ -1,5 +1,5 @@
     //def appName='E2E_App'
-    def appName='App_1'
+    def appName='App_2'
     def snapName=''
     //def deployName = 'TEST'
     //def deployName ='PerfApp91_dep__1'	
