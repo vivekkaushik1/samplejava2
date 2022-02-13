@@ -13,8 +13,9 @@
     def exporterName ='returnAllData' 
 
     // def namePath ="E2E/pipelineUpload/${currentBuild.number}"
-//    def namePath ='component1'
-    def namePath ="Comp_1/${JOB_NAME}/${currentBuild.number}"
+//   def namePath ='component1'
+ //   def namePath ="Comp_1/${JOB_NAME}/${currentBuild.number}"
+def namePath ="Comp_1"
 pipeline {
     agent any
     stages {
