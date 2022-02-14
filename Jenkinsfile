@@ -13,8 +13,8 @@
     def exporterName ='returnAllData' 
 
     // def namePath ="E2E/pipelineUpload/${currentBuild.number}"
-//   def namePath ='component1'
-   def namePath ="Comp_1/${JOB_NAME}/${currentBuild.number}"
+   def namePath ='Comp_1'
+  // def namePath ="Comp_1/${JOB_NAME}/${currentBuild.number}"
 //def namePath ="App_2/components/Comp_1${JOB_NAME}/"
 pipeline {
     agent any
@@ -22,7 +22,7 @@ pipeline {
         stage('Clone repository') {               
            steps{
                 // checkout scm
-                git branch: 'master', url: 'https://github.com/vivekkaushik1/samplejava'
+                git branch: 'master', url: 'https://github.com/rajkumat01/samplejava2'
            }
         }     
         stage('Validate Configurtion file'){
@@ -30,7 +30,7 @@ pipeline {
                 script{
                     sh "echo validating configuration file ${configFilePath}.${exportFormat}"
                     echo "name path ::::: ${namePath}"
-                    changeSetId = snDevOpsConfigUpload(applicationName:"${appName}",target:'component',namePath:"${namePath}", configFile:"component1.json", autoCommit:true,autoValidate:true,dataFormat:"${exportFormat}")
+                    changeSetId = snDevOpsConfigUpload(applicationName:"${appName}",target:'component',namePath:"${namePath}", configFile:"fileB.json", autoCommit:true,autoValidate:true,dataFormat:"${exportFormat}")
                     // snDevOpsConfigUpload(applicationName:"${appName}",target:'deployable',namePath:"${namePath}", fileName:"deployable", autoCommit:'true',autoValidate:'true',dataFormat:"${exportFormat}",changesetNumber:"${changeSetId}", deployableName:"${deployName}")
                     echo "validation result $changeSetId"
                 }
