@@ -14,9 +14,8 @@
 
     // def namePath ="E2E/pipelineUpload/${currentBuild.number}"
 //   def namePath ='component1'
-//   def namePath ="Comp_1/${JOB_NAME}/${currentBuild.number}"
-  //  def namePath ="Comp_1/${JOB_NAME}"
-def namePath ="App_2/components/Comp_1${JOB_NAME}/"
+   def namePath ="Comp_1/${JOB_NAME}/${currentBuild.number}"
+//def namePath ="App_2/components/Comp_1${JOB_NAME}/"
 pipeline {
     agent any
     stages {
