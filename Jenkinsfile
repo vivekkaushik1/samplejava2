@@ -7,7 +7,8 @@
     def exportFormat ='json'
     def configFilePath = "paymentService"
     def fileNamePrefix ='exported_file_'
-    def fullFileName="${appName}-${deployName}-${currentBuild.number}.${exportFormat}"
+   // def fullFileName="${appName}-${deployName}-${currentBuild.number}.${exportFormat}"
+    def fullFileName="Comp_2"
     def changeSetId=""
     def snapshotName=""
     def exporterName ='returnAllData' 
