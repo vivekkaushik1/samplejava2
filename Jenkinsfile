@@ -9,14 +9,14 @@
     def changeSetId=""
     def snapshotName=""
     def exporterName ='returnAllData' 
-    def namePath ="Comp_1"
+    def namePath ="Comp_2"
 pipeline {
     agent any
     stages {
         stage('Clone repository') {               
            steps{
                 // checkout scm
-                git branch: 'master', url: 'https://github.com/vivekkaushik1/samplejava'
+                git branch: 'master', url: 'https://github.com/vivekkaushik1/samplejava2'
            }
         }     
         stage('Validate Configurtion file'){
