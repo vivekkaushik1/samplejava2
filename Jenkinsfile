@@ -105,11 +105,4 @@ pipeline {
             }
         }
     }
-    
-     post {
-        success {
-            echo 'Run E2E Test pipeline2_1!!!!!!!!'
-            build job: 'E2ESamplePipeLine2_1', parameters: [string(name: 'MY_PARAM', value: 'value from Build pipeline')]
-        }
-    }
 }
