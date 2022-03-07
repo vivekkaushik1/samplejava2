@@ -2,7 +2,7 @@
     def snapName=''
     def deployName ='Dep_1'
     def exportFormat ='json'
-    def configFilePath = "fileB.json"
+    def configFilePath = "fileB"
     def fileNamePrefix ='exported_file_'
     def fullFileName="${appName}-${deployName}-${currentBuild.number}.${exportFormat}"
     def changeSetId=""
